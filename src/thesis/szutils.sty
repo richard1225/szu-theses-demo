@@ -1,4 +1,4 @@
-\ProvidesPackage{szutils}  
+\ProvidesPackage{szutils}
 
 \usepackage[headheight=13pt,top=0.9cm,bottom=2.5cm,left=3cm,right=2cm,includehead,includefoot]{geometry}
 \usepackage{booktabs}%
@@ -31,32 +31,32 @@ citecolor=black
 %页眉页脚
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\lhead{} 
-\chead{深圳大学本科毕业论文 \quad 融合内容信息的单类协同过滤推荐算法研究}  
-\rhead{} 
-\lfoot{} 
+\lhead{}
+\chead{深圳大学本科毕业论文 \quad 融合内容信息的单类协同过滤推荐算法研究}
+\rhead{}
+\lfoot{}
 \cfoot{}
-\rfoot{} 
-\renewcommand{\headrulewidth}{0.4pt} 
+\rfoot{}
+\renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\headwidth}{\textwidth}
 \renewcommand{\footrulewidth}{0pt}
 
 %目录样式
 \usepackage{titletoc}
 \titlecontents{section}[0mm]
-{\fontsize{12pt}{20pt}\selectfont \CJKfamily{song}}
+{\fontsize{12pt}{20pt}\selectfont \songti}
 {\filleft\contentslabel{1em}}
 {\hspace*{-1em}} %保证摘要等对齐  contentslabel的距离与此处的hspace大小相等,正负相反,即可对齐
 {\titlerule*{.}\contentspage}
 
 \titlecontents{subsection}[10mm]
-{\fontsize{12pt}{20pt}\selectfont \CJKfamily{song}}
+{\fontsize{12pt}{20pt}\selectfont \songti}
 {\contentslabel{2em}}
 {\hspace*{-2em}}
 {\titlerule*{.}\contentspage}
 
 \titlecontents{subsubsection}[20mm]
-{\fontsize{12pt}{20pt}\selectfont \CJKfamily{song}}
+{\fontsize{12pt}{20pt}\selectfont \songti}
 {\contentslabel{3em}}
 {\hspace*{-3em}}
 {\titlerule*{.}\contentspage}
@@ -64,20 +64,17 @@ citecolor=black
 %调整段间距，在原有基础上增大0.5em
 \addtolength{\parskip}{.5em}
 
+%“目录”两个字的样式与section的样式一致，默认居中，故将设置section标题居左放置在生成目录后
 \ctexset{
-	contentsname={目\quad录},
-	bibname={\kaishu\zihao{5}\textbf{【 参考文献】}}
+    contentsname={目\quad{}录},
+    bibname={\kaishu\zihao{5}\textbf{【 参考文献】}},
+    section={format={\Large\bfseries}},  %section标题居左
 }
 
 \renewcommand{\algorithmcfname}{算法}
 
-\DeclareGraphicsExtensions{.eps,.ps,.png,.jpg}%对于同名图片的优先顺序调用
+\DeclareGraphicsExtensions{.ps,.png,.jpg,.eps}%对于同名图片的优先顺序调用
 \graphicspath{{graphics/}}%设置图片路径为当前路径下的graphics文件夹
 
 
 \endinput
-
-
-
-
-
