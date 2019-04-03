@@ -15,7 +15,14 @@
 \zihao{-4}
 
 \tableofcontents %生成目录
+
+
 \thispagestyle{empty}%页脚不要页码
+
+%“目录”两个字的样式与section的样式一致，默认居中，故将设置section标题居左放置在生成目录后 
+\ctexset{
+    section={format={\Large\bfseries}},  %section标题居左
+}
 
 %%%%正文开始，页脚有页码
 \cfoot{\zihao{-5}第 \ \thepage \ 页 \ 共 \ \pageref{lastpage} 页}%%%%lastpage为末页标签
