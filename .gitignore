@@ -12,6 +12,7 @@
 *.gls
 *.idx
 *.ilg
+*.pdf
 *.ind
 *.ist
 *.lof
