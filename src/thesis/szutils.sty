@@ -64,11 +64,9 @@ citecolor=black
 %调整段间距，在原有基础上增大0.5em
 \addtolength{\parskip}{.5em}
 
-%“目录”两个字的样式与section的样式一致，默认居中，故将设置section标题居左放置在生成目录后
 \ctexset{
-    % contentsname={目录},
+    contentsname={目\quad{}录},
     bibname={\kaishu\zihao{5}\textbf{【 参考文献】}},
-    section={format={\Large\bfseries}},  %section标题居左
 }
 
 \renewcommand{\algorithmcfname}{算法}
