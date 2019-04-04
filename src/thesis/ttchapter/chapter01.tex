@@ -1,7 +1,7 @@
 \section{引言}
 
 \subsection{研究背景及意义}
-当一用户打开大众点评想要搜索家附近的咖啡厅时，用户不仅提供了查询内容，还包括其位置信息，这类查询称为空间关键字查询[BIB 10,12,15,17,18,19,21,25,27,34-36]。空间关键字查询的信息是多维度的，不仅表示了用户搜索目标，还指定了空间信息，例如街道地址、邮政编码或纬度和经度等地理坐标。图\ref{top5object}展示了一个空间关键字查询示例。图中的黑点表示查询位置，查询内容为“便利店”。该查询基于一个评分函数，对充电桩的距离和文本相关性进行加权求和，返回排名前5位的便利商店，在图中用正方形表示。空间关键词查询广泛地应用在商业环境中中，例如，为了适应移动互联网下搜索对象的变化，Google推出了一系列变革的搜索项目，Google Now就是其中一个。Google Now会记录用户的动态行为以满足他们未来的搜索需求，比如，该软件会记录用户开车的行为以及是否停止驾驶或离开车子，避免用户忘记车子停那里。
+当一用户打开大众点评想要搜索家附近的咖啡厅时，用户不仅提供了查询内容，还包括其位置信息，这类查询称为空间关键字查询\cite{DBLP:conf/sigmod/ChenSM06,DBLP:journals/pvldb/CongJW09,DBLP:conf/icde/FelipeHR08, DBLP:conf/ssdbm/HariharanHLM07,DBLP:conf/dexa/KhodaeiSL10, DBLP:conf/cikm/ZhouXWGM05,DBLP:journals/tkde/LiLZLLW11,DBLP:conf/sigmod/LuLC11,DBLP:conf/ssd/RochaGJN11,DBLP:journals/vldb/WuCJ12,DBLP:journals/tkde/WuYCJ12,DBLP:journals/tods/WuYJ13}。空间关键字查询的信息是多维度的，不仅表示了用户搜索目标，还指定了空间信息，例如街道地址、邮政编码或纬度和经度等地理坐标。图\ref{top5object}展示了一个空间关键字查询示例。图中的黑点表示查询位置，查询内容为“便利店”。该查询基于一个评分函数，对充电桩的距离和文本相关性进行加权求和，返回排名前5位的便利商店，在图中用正方形表示。空间关键词查询广泛地应用在商业环境中中，例如，为了适应移动互联网下搜索对象的变化，Google推出了一系列变革的搜索项目，Google Now就是其中一个。Google Now会记录用户的动态行为以满足他们未来的搜索需求，比如，该软件会记录用户开车的行为以及是否停止驾驶或离开车子，避免用户忘记车子停那里。
 \begin{figure}[htbp]
 	% caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
 	% label的位置也有讲究
@@ -12,14 +12,14 @@
 	\end{center}
 \end{figure}
 
-近年来，有几项基于空间关键字查询的研究，但它们在查询参数和评分函数上有所不同。连续移动空间的top-k关键字查询[36,37]在查询位置不断变化下返回最新的结果；位置感知型的top-k权威文本检索查询[6]对权威对象的邻近对象给予高排名；集合空间关键字查询[7]检索一组与查询关键字匹配的对象；RochaJunior和Nørvåg[28]考虑公路网络空间下的关键词搜索；李[20]研究移动方向下的空间关键字搜索。但是大多数现有的研究以单个对象作为结果对象。然而在空间关键字查询中，用户可能更感兴趣的是满足查询需求的区域，例如，对于一个想要找“川菜餐厅”的用户来说，一组距离远且分散的餐厅推荐显然不是他想获得的结果。事实上，这些在空间上彼此靠近，文本相似的对象之间往往能够构成小型区域[13]，显示出区域性特征。而空间文本聚类便是在无监督条件下找出这些区域，称为“簇”。
+近年来，有几项基于空间关键字查询的研究，但它们在查询参数和评分函数上有所不同。连续移动空间的top-k关键字查询\cite{DBLP:journals/tods/WuYJ13,DBLP:conf/icde/WuYJC11}在查询位置不断变化下返回最新的结果；位置感知型的top-k权威文本检索查询\cite{DBLP:journals/pvldb/CaoCJ10}对权威对象的邻近对象给予高排名；集合空间关键字查询\cite{DBLP:conf/sigmod/CaoCJO11}检索一组与查询关键字匹配的对象；RochaJunior和Nørvåg\cite{DBLP:conf/edbt/Rocha-JuniorN12}考虑公路网络空间下的关键词搜索；李\cite{DBLP:conf/icde/LiFX12}研究移动方向下的空间关键字搜索。但是大多数现有的研究以单个对象作为结果对象。然而在空间关键字查询中，用户可能更感兴趣的是满足查询需求的区域，例如，对于一个想要找“川菜餐厅”的用户来说，一组距离远且分散的餐厅推荐显然不是他想获得的结果。事实上，这些在空间上彼此靠近，文本相似的对象之间往往能够构成小型区域，显示出区域性特征。而空间文本聚类便是在无监督条件下找出这些区域，称为“簇”。
 
 聚类是数据挖掘领域中一种无监督地组织和管理信息的技术之一。空间文本聚类以文本信息为特征、空间关键词查询信息为约束条件，使用相似度计算将具有相似属性但无类别标记的文本信息聚类在一起。
 
 因此如何利用空间关键字查询所体现的区域性，从海量的数据中有效提取信息并将其按特征划分是大数据时代下一个重要的研究问题。
 
 \subsection{研究目的与主要工作}
-以往的研究[11,22,32]考虑目标与检索区域的共定位关系，使结果区域内的目标总权重最大化的同时使结果区域限定为特定的形状（固定大小的矩形或圆形）。另外一项研究[3]提出了一个支持探索性用户行为的解决方案，并且聚类结果没有形状约束。该研究提出一种新型的查询,即top-k空间文本簇(k-STC)查询，该查询结果将返回top-k簇, 满足（i）每个簇包含与查询关键词语义相关的对象，（ii）每个簇的密度满足用户给出的约束，以及（iii）根据到用户地理位置的距离以及与查询关键字的语义相关性对符合查询要求的簇排序。图\ref{top5cluster}是k-STC查询的示例，查询位置和关键字与图\ref{top5object}一致，结果簇展示在图中。
+以往的研究[DBLP:journals/pvldb/ChoiCT12,DBLP:conf/cikm/LiuYS11,DBLP:journals/pvldb/TaoHCC13]考虑目标与检索区域的共定位关系，使结果区域内的目标总权重最大化的同时使结果区域限定为特定的形状（固定大小的矩形或圆形）。另外一项研究\cite{DBLP:conf/cikm/WuJ16}提出了一个支持探索性用户行为的解决方案，并且聚类结果没有形状约束。该研究提出一种新型的查询,即top-k空间文本簇(k-STC)查询，该查询结果将返回top-k簇, 满足（i）每个簇包含与查询关键词语义相关的对象，（ii）每个簇的密度满足用户给出的约束，以及（iii）根据到用户地理位置的距离以及与查询关键字的语义相关性对符合查询要求的簇排序。图\ref{top5cluster}是k-STC查询的示例，查询位置和关键字与图\ref{top5object}一致，结果簇展示在图中。
 \begin{figure}[htbp]
 	% caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
 	% label的位置也有讲究
@@ -34,259 +34,32 @@ k-STC引入IR-树存储空间对象及其文本描述，依据关键词从IR-树
 
 本论文是对k-STC空间文本簇查询的进一步研究，设计并实现基于密度空间文本簇检索系统。主流的聚类算法有层次聚类、扁平聚类、基于密度的聚类、基于网格的聚类等，本论文采用基于密度的聚类算法，优点是（1）聚类结果不受距离限制；（2）不需要指明聚类数量；（3）对异常值具有健壮性。另外，本论文还将针对空间对象数量大，遍历IR-tree检索对象耗时的问题，引入带有词项权重的索引文件，使检索系统能够更快的找到优异的簇，提高检索效率。并通过实验验证系统的性能和优化效果。
 
-\subsubsection{Pairwise Preference Assumption}
-BPR\cite{rendle2009bpr}是一个应对隐式反馈很流行的推荐框架. 它基于这样一个偏好假设: 如果一个用户$u$已经选择了物品$i$但是没有选择物品$j$，那么在BPR中, 我们认为相对于物品$j$用户$m$更喜欢物品$i$,并定义用户$u$关于物品$i$与$j$的偏好关系为：
-\begin{equation}
-\label{pairwisepre}
-p \left( i \succ_u j \right) := f \left( x_{uij} \right),
-\end{equation}
-这里$f \left(x\right) = 1/\left(1+exp\left(-x\right)\right)$\footnote{$f \left(x\right)$即为sigmoid函数}, $x_{uij} := s\left(u,i\right) - s\left(u,j\right)$, $s\left(\cdot,\cdot\right)$可以是任何表示用户与物品相关程度的函数。在BPR\cite{rendle2009bpr}中, $s\left(\cdot,\cdot\right)$为用户对物品的预测值, 即$s\left(u,i\right) = \hat{r}_{ui}$, $x_{uij} = \hat{r}_{ui}-\hat{r}_{uj}$.
-
-
-\subsubsection{预测公式}
-
-在BPR中, 用户$u$对于物品$i$的预测值$\hat{r}_{ui}$公式为:
-\begin{equation}
-\hat{r}_{ui} = U_{u\cdot}V_{i\cdot}^T + b_i
-\end{equation}
-
-
-\subsubsection{Likelihood of Pairwise Preference}
-
-伯努利分布(Bernouli distribution)是关于布尔变量 $x \in \{0,1\}$ 的概率分布, 其连续参数 $p \in \left[0,1\right]$的概率.
-\begin{equation}
-\left( x|p \right) = Ber\left(x|p \right)=p^x\left(1-p \right)^{1-x}
-\end{equation}
-
-若记事件 $\left(\hat{r}_{ui} > \hat{r}_{uj}\right)$ 的概率为$p\left(\hat{r}_{ui} > \hat{r}_{uj}\right)$, 布尔变量$\delta\left(\left(u,i\right) \succ \left(u,j\right)\right)$ 服从伯努利分布, 那么用户$u$的likelihood of pairwise preference 在\cite{rendle2009bpr}中被定义为:
-\begin{equation}
-\label{LPP}
-\begin{aligned}
-LPP_u  
-&= \prod_{i,j \ \in \  \mathcal{I}}p\left(\hat{r}_{ui} > \hat{r}_{uj}\right)^{\delta\left(\left(u,i\right) \succ \left(u,j\right)\right)} \left[1-p\left(\hat{r}_{ui} > \hat{r}_{uj}\right)\right]^{1-\delta\left(\left(u,i\right) \succ \left(u,j\right)\right)}\\
-&= \prod_{\left(u,i\right) \succ \left(u,j\right)}p\left(\hat{r}_{ui} > \hat{r}_{uj}\right)\prod_{\left(u,i\right) \preceq \left(u,j\right)}\left[1-p\left(\hat{r}_{ui} > \hat{r}_{uj}\right)\right]
-\end{aligned}
-\end{equation}
-
-这里的$\left(u,i\right) \succ \left(u,j\right)$ 表示用户 $u$ 相比物品 $i$ 更喜欢物品 $j$.
-
-用 $f \left(\hat{r}_{uij} \right)$ 来近似表示概率
-$p\left(\hat{r}_{ui} > \hat{r}_{uj}\right)$ \cite{rendle2009bpr}, 对于公式\ref{LPP}取其对数即$\ln LPP_u$, 那么就有:
-\begin{equation}
-\label{eq5}
-\begin{aligned}
-\ln LPP_u
-&= \ln \prod_{\left(u,i\right) \succ \left(u,j\right)} f \left(\hat{r}_{uij}\right) + \ln \prod_{\left(u,i\right) \preceq \left(u,j\right)}\left[1- f \left(\hat{r}_{uij}\right)\right]\\
-&= \ln \prod_{\left(u,i\right) \succ \left(u,j\right)} f \left(\hat{r}_{uij}\right) + \ln \prod_{\left(u,i\right) \succ \left(u,j\right)}\left[1-\left(1- f \left(\hat{r}_{uij}\right)\right)\right]\\
-&= \ln \prod_{\left(u,i\right) \succ \left(u,j\right)} f \left(\hat{r}_{uij}\right) + \ln \prod_{\left(u,i\right) \succ \left(u,j\right)} f \left(\hat{r}_{uij}\right)\\
-&= 2\ln \prod_{\left(u,i\right) \succ \left(u,j\right)} f \left(\hat{r}_{uij}\right)\\
-&= 2 \sum_{i\in\mathcal{I}_u^{tr}}
-\sum_{j \in \mathcal{I}\setminus \mathcal{I}_u^{tr}}\ln f \left(\hat{r}_{uij}\right)
-\end{aligned}
-\end{equation}
-在这里$\hat{r}_{uij} = \hat{r}_{ui} - \hat{r}_{uj}$, $f \left(x\right) = 1/\left(1+exp\left(-x\right)\right)$, .
-
-\subsubsection{目标函数}
-
-基于上面的成对偏好假设，可以从隐式反馈数据集中得到所有的偏好集合$D_S := \{\left(u,i,j\right) | v_i \in I_{u}^+ \wedge v_j \in I \setminus I_{u}^+\}$，$I_m^+$表示被用户$u$选择过的物品集合，三元组$\left(u,i,j\right)$表示用户$u$选择过物品$v_i$但是没有选择过物品$v_j$。我们把$v_i$叫做一个positive item，$v_j$叫做一个negative item。对于给定的集合$D_S$, BPR的目标便是最大化所有user-item pair的似然偏好：
-
-\begin{equation}
-\label{eq6}
-arg \max_{\substack \Theta } \prod_{\left(u,i,j\right) \in D_S} p\left(i \succ_u j\right),
-\end{equation}
-
-公式\eqref{eq6}等价于最小化负的对数似然函数：
-
-\begin{equation}
-\label{Lfeedback}
-L_{feedback} = - \sum_{\left(u,i,j\right) \in D_S}\ln f \left( x_{uij}\right) + \lambda\|\Theta\|^2,
-\end{equation}
-这里的$x_{uij} = \hat{r}_{uij}$, $\Theta$表示算法中需要学习的模型参数集合，$\lambda$表示超参数集合。在实际的算法学习中, BPR的学习算法经常采用均匀采样的随机梯度下降(\textbf{S}tochastic \textbf{G}radient \textbf{D}escent)进行迭代学习。
-
-更为具体的,公式\eqref{Lfeedback}也就是最小化下面的目标函数(Objective Function): 
-\begin{equation}
-\label{eq8}
-\min_{\substack\Theta}\sum_{u\in\mathcal{U}} \ \sum_{i\in\mathcal{I}_u}\sum_{j\in\mathcal{I}\setminus\mathcal{I}_u}\Phi_{uij}
-\end{equation}
-这里的
-$\Phi_{uij}
-= 
-- \ln f \left(\hat{r}_{uij}\right) 
-+ \frac{\alpha_u}{2}\|U_{u\cdot}\|^2
-+ \frac{\alpha_v}{2}\|V_{i\cdot}\|^2
-+ \frac{\alpha_v}{2}\|V_{j\cdot}\|^2
-+ \frac{\beta_v}{2}\|b_{i}\|^2
-+ \frac{\beta_v}{2}\|b_{j}\|^2$, $\Theta = \{U_{u\cdot},V_{i\cdot},b_i\}
-$的将要学习的参数集合。
-
-
-\subsubsection{随机梯度}
-对于一个随机采样而得的三元组$\left(u,i,j\right)$, 对目标函数中的参数求其偏导即可得梯度。
-
-在此之前先做一些准备工作，对于函数$f(x) = 1/\left(1+e^{-x}\right)$的导数:
-
-\begin{equation*}
-f^{'}(x) = -\frac{1}{\left(1+e^{-x}\right)^2} e^{-x}\left(-1\right) = \frac{e^{-x}}{\left(1+e^{-x}\right)^2} = \frac{1}{\left(1+e^{x}\right)\left(1+e^{-x}\right)} = {f(x)f(-x)}
-\end{equation*}
-
-下面开始对参数$U_{u\cdot}$求其偏导：
-\begin{equation}
-\begin{aligned}
-\bigtriangledown U_{u\cdot} 
-= \frac{\partial \Phi_{uij}}{\partial U_{u\cdot}}
-&=-\frac{\partial \ln f\left(\hat{r}_{uij}\right)}{\partial f\left(\hat{r}_{uij}\right)} 
-\frac{\partial f\left(\hat{r}_{uij}\right) }{\partial \hat{r}_{uij}} 
-\frac{\partial \hat{r}_{uij}}{\partial U_{u\cdot}}
-\ + \  \alpha_uU_{u\cdot}\\
-&= -\frac{1}{f\left(\hat{r}_{uij}\right)} 
-\frac{\partial f\left(\hat{r}_{uij}\right) }{\partial \hat{r}_{uij}} 
-\frac{\partial \hat{r}_{uij}}{\partial U_{u\cdot}}
-\ + \  \alpha_uU_{u\cdot}\\
-&= -\frac{1}{f\left(\hat{r}_{uij}\right)} 
-{f\left(\hat{r}_{uij}\right) f\left(-\hat{r}_{uij}\right)}
-\frac{\partial f\left(\hat{r}_{ui} - \hat{r}_{uj}\right) }{\partial U_{u\cdot}} 
-\ + \ \alpha_uU_{u\cdot}\\
-&= -{f\left(-\hat{r}_{uij}\right)} \frac{\partial f\left[\left(U_{u\cdot}V_{i\cdot}^T+b_i\right) - \left(U_{u\cdot}V_{j\cdot}^T+b_j\right)\right] }{\partial U_{u\cdot}} 
-\ + \ \alpha_uU_{u\cdot}\\
-&= -{f\left(-\hat{r}_{uij}\right)} \left(V_{i\cdot} - V_{j\cdot}\right)  
-\ + \  \alpha_uU_{u\cdot}\\
-\end{aligned}
-\end{equation}
-
-同样其他参数随机梯度如下:
-%\begin{equation}
-\begin{align} %align环境不要有空行
-\bigtriangledown V_{i\cdot} &= \frac{\partial \Phi_{uij}}{\partial V_{i\cdot}}=-f\left(-\hat{r}_{uij}\right)U_{u\cdot} + \alpha_vV_{i\cdot}\\
-\bigtriangledown V_{j\cdot} &= \frac{\partial \Phi_{uij}}{\partial V_{j\cdot}}=-f\left(-\hat{r}_{uij}\right)\left(-U_{u\cdot}\right) + \alpha_vV_{j\cdot}\\
-\bigtriangledown b_i        &= \frac{\partial \Phi_{uij}}{\partial b_i} =-f\left(-\hat{r}_{uij}\right)+\beta_vb_i\\
-\bigtriangledown b_j        &= \frac{\partial \Phi_{uij}}{\partial b_j} =-f\left(-\hat{r}_{uij}\right)\left(-1\right)+\beta_vb_j
-\end{align}
-%\end{equation}
-
-\subsubsection{迭代更新}
-对于三元组  $\left(u,i,j\right)$ 在采用SGD的BPR算法中的更新公式如下:
-%align环境的每行公式默认会进行编号，aligned环境不会
-\begin{align}
-	\label{eq10}
-U_{u\cdot} &= U_{u\cdot} - \gamma\bigtriangledown U_{u\cdot}\\
-V_{i\cdot} &= V_{i\cdot} - \gamma\bigtriangledown V_{i\cdot}\\
-V_{j\cdot} &= V_{i\cdot} - \gamma\bigtriangledown V_{j\cdot}\\
-b_{i\cdot} &= b_i - \gamma\bigtriangledown b_{i}\\
-b_{j\cdot} &= b_j - \gamma\bigtriangledown b_{j}
-\end{align}
-
-这里的 $\gamma$ 为学习率(learning rate).
-
-\subsubsection{BPR算法}
-如算法\ref{al1}即为采用SGD求解的BPR算法。
-\IncMargin{1em}
-\begin{algorithm}[ht]
-	\SetAlgoNoLine %不要算法中的竖线
-	\BlankLine
-	
-	initialize the model parameter $\Theta$\;
-	\For {$t_1 = 1,\cdots,T$}{
-		\For {$t_2 = 1,\cdots, |\mathcal{P}|$}{
-			Randomly pick up a pair $\left(u,v_i\right) \in \mathcal{P}$\;
-			Randomly pick up an item $v_j$ from $\mathcal{I} \setminus \mathcal{I}_{u}^+$\;
-			Calculate the gradients via Eq.(9-13)\;
-			Update the model parameters via Eq.(14-18)\;
-		}	
-	}
-	\caption{The SGD algorithm for BPR}
-	\label{al1}%label 放置的位置有讲究， 放后面
-\end{algorithm}
-\DecMargin{1em}
-
-\subsubsection{收敛缓慢的原因}
-由于上面的均匀采样方式会产生很多对于参数学习贡献微弱的train pairs,因此常常会导致收敛缓慢。确切的讲，对于一个给定的训练采样$\left(u,i,j\right) \in D_S$, 由公式\ref{Lfeedback}对随机梯度下降的任意一参数$\theta \in \Theta$求其偏导:
-
-\begin{equation}
-\label{eq19}
-\frac {\partial L_{feedback}} {\partial\theta} 
-= -f\left(-x_{uij}\right)\frac{\partial\left(x_{uij}\right)}{\partial\theta}
-= \left(f\left(x_{uij}\right)-1\right) \frac{\partial\left(x_{uij}\right)}{\partial\theta}
-\end{equation}
-
-根据公式\eqref{eq19},如果$f \left(x_{uij}\right) \rightarrow +1$,随机梯度将接近于0，则训练采样$\left(u,i,j\right)$对于优化目标的贡献将会变得很小。
-\begin{figure}[htbp]
-	\begin{center}
-		\includegraphics[width=4in]{sigmoid}
-		\caption{sigmoid函数$f \left(x\right) $图像}
-		\label{gra-sigmoid}
-	\end{center}
-\end{figure}
-
-联系公式\eqref{eq19}与公式\eqref{pairwisepre}，由图\ref{gra-sigmoid} sigmoid函数图像可得, 当$f \left(x_{uij}\right) \rightarrow +1$时, 也就是$x_{uij} = \hat{r}_{ui} - \hat{r}_{uj}$越来越大, 即用户对于物品$v_i$与$v_j$的预测差值越来越大. 因此为了加速学习, 针对一个已有的user-item pair中的物品 $v_i$，要采样的物品$v_j$应当是$v_i$相比有竞争力的物品, 更进一步说也就是由该用户对于$v_i$与$v_j$的偏好得分应该是相近的，否则这个采样对于SGD便是低效的采样。
-
-从经验上来讲，每个用户只会浏览一小部分的物品并对这些浏览过的物品提供一些交互反馈。如果均匀采样器均等地从整个物品集合中采样negative  item.对于一个user-item  pair,大部分均匀采样的物品并不具有可比性或者很难被相关的用户浏览。举个例子，iPhone与牙刷或iPhone与一个冷门的手机品牌可能会经常被均匀采样器采得。而由于这些低效的training pair对于SGD几乎作用很小，整个训练过程便会收敛地极其缓慢。
-
-除此以外，与经典的分解技术相似，如果一个用户或物品缺乏足够的反馈，其对应的隐式表达往往不能够被很好的学习到。在现实世界数据集中，用户行为与物品流行度的分布往往呈现长尾状。这就导致了大部分的用户和物品仅仅有很小部分的反馈数据。此外，在真实的推荐系统中，新的个体可能在任何时间被加入到推荐系统中。因此，BPR框架也很容易受制于冷启动问题。
-
-\subsection{Latent Dirichlet Allocation}
-Latent Dirichlet allocation(LDA)，隐含狄利克雷分布，是一种主题模型(topic model)，它可以将文档集中每篇文档的主题按照概率分布的形式给出。同时它是一种无监督学习算法，在训练时不需要手工标注的训练集，需要的仅仅是文档集以及指定主题的数量即可。此外LDA的另一个优点则是，对于每一个主题均可找出一些词语来描述它。
-
-LDA首先由于2003年提出\cite{blei2003latent}，目前在文本挖掘领域包括文本主题识别、文本分类以及文本相似度计算方面都有应用。
-
-
-\subsubsection{数学模型}
-LDA是一种典型的词袋(Bag-of-words)模型，即它认为一篇文档(document)是由一组词(word)构成的一个集合，词与词之间没有顺序以及先后的关系。一篇文档可以包含多个主题(topic)，文档中每一个词都由其中的一个主题生成。
-
-\begin{figure}[htbp]
-	% caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
-	% label的位置也有讲究
-	\begin{center}
-		\includegraphics[width=4in]{LDA}
-		\caption{LDA 贝叶斯网络结构}
-		\label{gra4}
-	\end{center}
-\end{figure}
-
-另外，正如Beta分布是二项式分布的共轭先验概率分布，狄利克雷分布作为多项式分布的共轭先验概率分布。因此正如图\ref{gra4}, LDA贝叶斯网络结构中所描述的，在LDA模型中一篇文档生成的方式如下:
+主要的工作流程如下：
 \begin{itemize}
-	\item 从狄利克雷分布$\alpha$ 中取样生成文档$i$的主题分布$\theta_i$
-	\item 从主题的多项式分布$\theta_i$中取样生成文档$i$第$j$个词的主题$z_{i, j}$
-	\item 从狄利克雷分布$\beta $中取样生成主题$z_{i, j}$的词语分布$\phi_{z_{i, j}}$
-	\item 从词语的多项式分布$\phi_{z_{i, j}}$中采样最终生成词语$w_{i, j}$
-\end{itemize}
-因此整个模型中所有可见变量以及隐藏变量的联合分布是
-\begin{equation}
-p(w_i, z_i, \theta_i, \Phi | \alpha, \beta) = \prod_{j = 1}^{N} p(\theta_i|\alpha)p(z_{i, j}|\theta_i)p(\Phi|\beta)p(w_{i, j}|\theta_{z_{i, j}})
-\end{equation}
-
-
-最终一篇文档的单词分布的最大似然估计可以通过将上式的$\theta_i$以及$\Phi$进行积分和对$z_i$进行求和得到
-\begin{equation}
-p(w_i | \alpha, \beta)  = \int_{\theta_i}\int_{\Phi }\sum_{z_i}p(w_i, z_i, \theta_i, \Phi | \alpha, \beta) 
-\end{equation}
-
-
-根据$p(w_i | \alpha, \beta)$ 的最大似然估计，最终可以通过吉布斯采样等方法估计出模型中的参数。
-
-
-\subsubsection{使用吉布斯采样估计LDA参数}
-在LDA最初提出的时候，人们使用EM算法(Expectation-maximization algorithm)进行求解，后来人们普遍开始使用较为简单的Gibbs Sampling，具体过程如下：
-\begin{itemize}
-	\item 首先对所有文档中的所有词遍历一遍，为其都随机分配一个主题，即$z_{m,n}=k\sim Mult(1/K)$,其中$m$表示第$m$篇文档，$n$表示文档中的第$n$个词，$k$表示主题，$K$表示主题的总数，之后将对应的$n^{\left(k\right)}_m+1$, $n_m+1$, $n^{\left(t\right)}_k+1$, $n_k+1$, 他们分别表示在$m$文档中$k$主题出现的次数，$m$文档中主题数量的和，$k$主题对应的$t$词的次数，$k$主题对应的总词数。
-	\item 之后对下述操作进行重复迭代。
-	\item 对所有文档中的所有词进行遍历，假如当前文档$m$的词$t$对应主题为$k$，则$n^{\left(k\right)}_m-1$, $n_m-1$, $n^{\left(t\right)}_k-1$, $n_k-1$, 即先拿出当前词，之后根据LDA中topic sample的概率分布sample出新的主题，在对应的$n^{\left(k\right)}_m$, $n_m$, $n^{\left(t\right)}_k$, $n_k$上分别$+1$。
-	\begin{equation}
-	p(z_i=k|z_{-i},w) \propto k(n^{(t)}_{k,-i}+\beta_t)(n_{m,-i}^{(k)}+\alpha_k)/(\sum_{t=1}^{V}n_{k,-i}^{(t)}+\beta_t)
-	\end{equation}
-	\item 迭代完成后输出主题--词参数矩阵$\Phi$和文档--主题矩阵$\Theta$
-	\begin{align}
-	\phi_{k,t}   &=(n_k^{(t)}+\beta_t)/(n_k+\beta_t)  \\
-	\theta_{m,k} &=(n_m^{(k)}+\alpha_k)/(n_m+\alpha_k)
-	\end{align}
+	\item 收集空间文本数据
+	\item 设计并实现基于密度的空间文本检索系统
+	\item 根据优化方案，对系统进行优化
+	\item 测试系统并评估实验结果
 \end{itemize}
 
+\subsection{国内外相关研究}
+本论文主要涉及到两个技术:空间文本搜索（1.3.1）和聚类算法（1.3.2）。本小节将分别介绍这两个技术在国内外的相关研究。
 
 
+\subsubsection{空间文本搜索}
+空间关键词查询近年来引起了广泛的关注。目前已经提出了几种有效的地理文本索引来支持空间关键字查询。大多数索引结合了用于空间索引的R树和用于文本查询的倒排索引表，例如IR2$^2$-树\cite{DBLP:conf/icde/FelipeHR08}、IR-树\cite{DBLP:journals/vldb/WuCJ12}和S2I\cite{DBLP:conf/ssd/RochaGJN11}。这些混合索引结构能够在处理查询时利用空间信息和文本信息来修剪搜索空间。
 
+不同的空间关键字查询研究会采取不同的得分函数，这些得分函数决定了查询参数和如何确定对象与查询参数的相关性。例如，连续移动top-k 空间关键字查询\cite{DBLP:journals/tods/WuYJ13, DBLP:conf/icde/WuYJC11}；基于权重的位置感知top-k文本检索查询\cite{DBLP:journals/pvldb/CaoCJ10}；集合空间关键字查询\cite{DBLP:conf/sigmod/CaoCJO11}；RochaJunior和Nørvåg\cite{DBLP:conf/edbt/Rocha-JuniorN12}考虑了道路网络中的空间关键词搜索；Li等人\cite{DBLP:conf/icde/LiFX12}研究了受运动方向约束的空间关键词搜索等。
 
+还有一系列研究了满足不同用户需求的空间关键字查询研究。Chen等\cite{DBLP:conf/sigmod/ChenCC13}研究了如何将连续输入的布尔范围查询流与实时传入的地理文本对象流进行匹配的问题。关键字感知最优路由查询\cite{DBLP:journals/pvldb/CaoCCX12}找到了一个包含用户指定的一组关键字，满足指定的预算约束，并根据特定的评分函数获得最佳的评分的最优路由。集合空间关键字查询\cite{DBLP:journals/tods/CaoCGJO15,DBLP:conf/sigmod/CaoCJO11,DBLP:conf/sigmod/LongWWF13}查找一组对象，这些对象靠近一个查询点，并且集合包含一组查询关键字。Wu等\cite{DBLP:journals/tods/WuYJ13 ,DBLP:conf/icde/WuYJC11}研究了用户(查询位置)连续移动时，top-k空间关键字查询结果集的维护问题。反向空间文本k最近邻(RSTkNN)查询\cite{DBLP:conf/sigmod/LuLC11}找到的对象是将查询对象作为它们k个空间文本最相似的对象之一
 
+最近的研究\cite{DBLP:journals/pvldb/BoghSJ13,DBLP:journals/vldb/SkovsgaardJ15}针对的是用户希望找到与查询关键字相关的附近兴趣点集合的情况，部分用户希望在做出某些决定（诸如购买特定产品之类）之前，可以方便地探索若干个选项，而上述的集合便可以满足这类用户的需求。Zhang等\cite{DBLP:conf/icde/ZhangOT10, DBLP:conf/icde/ZhangCMTK09}研究的查询采用一组关键字，目标是找到一组地理文本对象，使其文本描述的联合覆盖所有的查询关键字，并使对象的直径最小化。考虑到对象之间的共定位关系，应当检索区域使得结果区域内的对象的总权重最大化\cite{DBLP:journals/pvldb/ChoiCT12,DBLP:conf/cikm/LiuYS11,DBLP:journals/pvldb/TaoHCC13}。最近的一项研究\cite{DBLP:journals/pvldb/CaoCJY14}计算了一个最大和区域，该区域的对象之间的公路网距离小于查询约束，得分之和最大。但是这种查询会检索到一个包含许多低分对象的区域，而忽略一个包含少数高分对象的区域。此外，该研究的查询为范围查询，减小了搜索空间，因而如果当查询范围覆盖整个数据集时，性能是不确定的。
 
+\subsubsection{聚类算法}
+聚类算法体系一般划分为扁平聚类、层次聚类、基于密度的聚类，基于网格的聚类等等\cite{DBLP:journals/coling/Vechtomova09}。聚类算法的选择决定了聚类结果的状态和效率。
 
+扁平聚类通过迭代重定位将文本集中的n个文本分配到K个簇中，使得同一个簇的对象满足“相关”关系，不同簇的对象满足“相异关系。最典型的算法有K-均值算法。针对聚类结果对中心敏感，k值无法确定这一问题，汤叶青\cite{DBLP:tyq}提出了一种改进的K-means算法和K值学习算法。K值学习算法引入遗传算法，根据适应度函数，不断通过遗传操作进行迭代找到最佳聚类数。
 
-\subsection{本章小结}
-本章首先介绍了采用SGD求解的Bayesian Personalized Ranking(BPR)推荐算法, 并且对可能导致其收敛缓慢的均匀采样策略做了讨论。然后简要介绍了LDA模型。
+层次聚类依据自顶向下或自底向上可以分为凝聚式或分裂式。凝聚式的基本思路是：先将每个文档看做一个簇， 然后不断对簇进行两两合并，直到所有的文档聚成一类。分裂式的基本思路是：先将所有文档看做一个簇，然后不断对簇进行分裂知道每篇文档都成为一个簇。扁平聚类和层次聚类依据对象间的聚类进行聚类，因而聚类只能为固定的球形。
+
+在基于密度的聚类中，簇是具有较高对象密度的区域。在稀疏区域内的对象通常被认定为噪点或边界对象。最常用的基于密度的聚类方法是DBSCAN\cite{DBLP:conf/kdd/EsterKSX96 },该方法基于一定距离内的物体相互连接的阈值的定义了一个簇模型，称为“密度-可达性”。簇由所有密集连接的对象以及所有位于这些对象阈值距离内的对象组成，并且簇可以具有任意形状。OPTICS\cite{DBLP:conf/sigmod/AnkerstBKS99 }是DBSCAN的一种推广，它不需要选择适当的范围参数，生成与连锁聚类相关的分层结果。DBRS\cite{DBLP:conf/pakdd/WangH03}通过反复随机选取一个非分类点并检查其邻域来改进DBSCAN。VDBSCAN\cite{DBLP:conf/icde/ZhangOT10}针对变密度数据集进行分析。在采用传统的DBSCAN算法之前，一些方法是根据k-dist图选择不同密度的几个参数ε值。在ε值不同的情况下，可以同时找到密度不同的簇。GDBSCAN根据点对象及其空间属性和非空间属性对点对象和空间扩展对象进行聚类。而基于密度的聚类能够发现任意形状的簇。基于密度的聚类判断一个簇的区域内是否达到阙值，小于阙值将被忽略，而大于阙值可以继续扩展。这样便有效地过滤了噪点。
