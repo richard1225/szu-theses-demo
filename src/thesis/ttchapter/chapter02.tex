@@ -1,5 +1,5 @@
 \section{top-k\ 空间文本簇检索系统设计}
-
+\numberwithin{equation}{subsection}
 空间文本簇检索过程包括文本预处理、空间索引构建、文本相似性度量、聚类算法选择、结果评价等过程。文本预处理阶段分为文本分词、构建倒排索引表；空间索引结构采用IR-树结构；文本相似度计算为余弦相似度；聚类算法选择基于密度的聚类方法中最具代表性的DBSCAN算法。总体设计流程如图\ref{topksearchprocess}所示：
 \begin{figure}[htbp]
 	% caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
@@ -12,6 +12,7 @@
 \end{figure}
 
 \subsection{top-k\ 空间文本簇查询定义}
+\label{topk_definition}
 
 定义一个数据集$D$，$p<\lambda,\varphi>\in D$,其中$p . \lambda$表示数据对象的位置信息，$p . \varphi$表示p的文本描述或文档信息（例如，餐馆的设施和菜单）。文档信息$p . \varphi$由一个向量$(w1, w2，...，wi)$表示，其中每个维度对应于文件中一个不同的词项$ti$。向量中每一项的权值$wi$用tf-idf值表示。词项$t$在文档$p$中出现的次数称为词项频率，记为$tf_{t,p}$。为了避免每个词项对于文档都同样重要（即对于文档的分类的贡献率相同），因此引入一个新的因子文档频率$df_{t}$,表示出现$t$的所有文档的数目。由于df本身往往较大，因此实际运用中需要映射到较小的取值上。为此，设定文档集总数为$N$，词项t的逆文档频率idf的定义如公式(\ref{idf})
 
@@ -29,8 +30,9 @@
 
 下面对于top-k空间文本簇给出相关扩展定义：
 
-\begin{enumerate}[labelwidth=1.5cm,labelindent=10pt,leftmargin=2.2cm,label=\bfseries 定义 \arabic*:,align=left]
-  \setcounter{enumi}{0}% just for the example
+\begin{enumerate}[labelwidth=1.5cm,labelindent=10pt,leftmargin=2.2cm,label=\bfseries{ 定义 \arabic*:},align=left]
+	\setcounter{enumi}{0}% just for the example
+	
   \item 给定关键字集合\varphi和相关对象集合$D\varphi$,有(i) $D\varphi \in D$且(ii) $\forall p \in D\varphi$($\varphi \cap p. \varphi\neq\phi$).
   \item 有相关对象$p \in D_{\varphi}$，其$\varepsilon$-邻近点集合表示为$N\varepsilon(p)$，有$N\varepsilon(p) = { p_{i}\in D\varphi \mid \left| pp_{i}\right| < \varepsilon }$
   \item 相关对象$p$的$ \varepsilon $-邻近点集合$N \varepsilon (p)$如果是密集型的则表示该集合至少包含$minpts$个对象，即$\left| N \varepsilon (p) \right| \geq minpts$
@@ -111,7 +113,83 @@ car, cars, car’s, cars’=> car
 
 分词模块将数据集的每一个文档按照文本字段和空间字段分别处理，文本字段即对象的描述内容，空间字段即对象的位置信息。分词模块会对分开处理中文文本和英文文本，对于中文文本，模块调用jieba分词接口进行分词处理，英文文本根据分隔符对单词进行预处理，再调用词干还原接口对单词作进一步处理。分词结果以词项列表的形式存储。通过接口处理完文本后，每个文本的词项都存储在内存中，并以传递给文本向量化模块。
 
-\textbf{2.文本向量化模块:} 文本向量化模块根据每个文本的分词结果计算出每个词项的tf-idf值，以向量形式表示文本。首先，统计出一个词项词典d，该词典包含数据集D全部的词项t。然后，统计出每个词项对应tf和df值。根据公式（2-1）〖idf〗_(t )=log N/〖df〗_t   和（2-2）tf-idft,d = tft,d × idft计算出tf-idf值。至此，文档p.φ可以向量化表示为(w1, w2，···，wi)，w_i=tf_i×idf_i。
+\textbf{2.文本向量化模块:} 文本向量化模块根据每个文本的分词结果计算出每个词项的tf-idf值，以向量形式表示文本。首先，统计出一个词项词典d，该词典包含数据集D全部的词项t。然后，统计出每个词项对应tf和df值。根据公式(\ref{idf}) $idf_{t} = log\frac{N}{df_{t}}$和公式(\ref{tfidf})$tfidf_{t,d} = tf_{t,d} \times idf_{t}$ 计算出tf-idf值。至此，文档$p.\varphi$可以向量化表示为$(w_1, w_2，...，w_i)，w_i=tf_i×idf_i$
+
+文本检索中，我们需要根据关键词定位文档信息，所以我们需要一个从词项反向映射到文档的一种数据结构—反向文件。反向文件包含词项词典d，d中每一个词项都有一个记录包含该词项的所有文档的列表（称为倒排记录表，posting list），该表中的每一个元素表示词项在文档中的权重，即反向文件 = $\sum_{t_i \in d}(\sum_{p_i \cup t_i}(p_i,w_i))$。表\ref{reverse_file}为本论文所采用的反向文件的一个示例：
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{反向文件示例}
+    \label{reverse_file}
+    \begin{tabular}{l|l} % <-- Alignments: 1st column left, 2nd middle and 3rd right, with vertical lines in between
+      \textbf{词典\ d} & \textbf{倒排索引表} \\
+			\hline
+			coffee & (p3, 0.5), (p6, 0.5), (p7, 0.5), (p1, 0.2), (p2, 0.2) \\
+      tea & (p5, 0.5), (p7, 0.7), (p, 0.2), (p2, 0.3) \\
+      pizza & (p4, 0.5)
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\textbf{3.空间文本索引构建模块}的任务分为构建R树和构建IR树两个主要部分。R树是一种存储空间数据的树形数据结构，核心思想是将空间上距离相近的对象集合为一个节点并在其树结构中的父节点中将其表示为最小外接矩形（minimum bounding rectangle,MBR）。图\ref{rtree:example}展示了一个在二维空间上简单的R树的例子。p1-7为空间对象，Na,Nb,Nc，Nd为MBR。图\ref{rtree:mmb}展示了p1-7在空间上的而相对位置以及MBR的范围，MBR不断聚合最终形成图\ref{rtree:structure}所示的结构。 
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.7\linewidth]{rtree-example.png}
+		\caption{R树的数据结构}
+		\label{rtree:structure}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.48\linewidth]{mbb-space-object.png}
+		\caption{空间对象的MBB}
+		\label{rtree:mmb}
+	\end{subfigure}
+	\caption{R树示例}
+	\label{rtree:example}
+\end{figure}
+
+自底向上遍历R树，给每个节点创建反向文件。该反向文件记录了该节点下所有子节点或空间对象的倒排索引表。例如，定义空间对象的文本描述为$p=(w_1,w_2,…,w_i)$ ，假设$p4，p5$的文本描述为$p4 = ((pizza, 0.5))，p5 = ((tea, 0.5))$，则节点$Nb$的反向文件为$Nb = ((tea, p5), (pizza, p4))$。以表\ref{reverse_file}的反向文件为例，可以在图\ref{rtree:structure}的基础上得到如图\ref{ir_tree_example}所示的IR树，IR-树每个节点包含一个$e=(id,A,|D|)$形式的条目，其中$e.id$为节点标识符，$e. A$是对象空间位置的最小边界矩形, $e. \left| D \right|$是该节点内空间对象或子节点的数量。每个节点还包含一个指向反向文件的指针。非叶子同叶子节点有相同的条目，但其子节点为非叶子或叶子节点，不直接包含空间对象。
+
+\begin{figure}[htbp]
+	\centering
+	\label{ir_tree_example}
+	\includegraphics[width=6in]{ir-tree.png}
+	\caption{top-k空间文本簇系统框架图}
+\end{figure}
+
+\subsubsection{查询模块}
+
+由\ref{topk_definition}节可知，top-k空间文本簇(k-STC)查询$q=<\lambda, \varphi, k, \varepsilon, minpts>$有五个参数，\textbf{查询模块}会将参数分为3个字段，一个是文本字段，即一组关键词$\varphi$；一个是空间字段，即查询位置$\lambda$；最后一个是调节参数，包含距离约束$\varepsilon$，密度阙值$minpts$，请求簇的数量$k$。
+通过全文检索系统Lucene检索文档集，返回包含关键词的文档集$D_\varphi$。选取一个文档作为核心对象执行聚类算法，找到以该核心对象为中心的簇，如果有满足参数条件$（\varepsilon，minpts）$的簇则计算簇得分（公式\ref{simp1p2}），加入候选列表。最终返回$k$个得分较好的簇。
+
+\subsection{top-k空间文本簇查询处理算法}
+
+聚类算法选择基于密度的聚类方法中最具代表性的DBSCAN算法。DBSCAN随机选取一个对象作为核心点，检查核心点的邻近领域是否至少有若干个对象，满足则对邻近对象继续迭代检查，不满足而标记噪点。邻近区域的大小和密度阙值由用户决定。
+
+DBSCAN算法的一个基本方案是，给定一个查询，根据查询关键字获得相关的对象集$D\varphi$，然后找到所有满足密度约束的簇，根据得分函数（公式\ref{simp1p2}）排序，返回最优的$k$个簇。但是这个方案效率很低，因为查找所有簇的开销很大。研究[3]提出了一种BASIC算法，该算法能够在不查找所有簇的情况下返回最顶层的$k$个簇。BASIC算法将前期得到的集群作为候选集群，然后根据第$k$个候选集群的得分设置阈值。BASIC算法对所有未来将找到的集群分数估计一个边界值，如果边界值比阈值低，则当前候选集群为最终结果。BASIC算法的提前停止条件大大提高了聚类效率。
+
+\IncMargin{1em}
+\begin{algorithm}[ht]
+	\Require 查询关键词 $q=<\lambda,\varphi,k,\varepsilon,minpts>$, IR-树 $irtree$, 反向文件索引 $iindex$
+	\Ensure $rlist$
+	\SetAlgoNoLine %不要算法中的竖线
+	\BlankLine
+	
+	\For {$t_1 = 1,\cdots,T$}{
+		\For {$t_2 = 1,\cdots, |\mathcal{P}|$}{
+			Randomly pick up a pair $\left(u,v_i\right) \in \mathcal{P}$\;
+			Randomly pick up an item $v_j$ from $\mathcal{I} \setminus \mathcal{I}_{u}^+$\;
+			Calculate the gradients via Eq.(9-13)\;
+			Update the model parameters via Eq.(14-18)\;
+		}	
+	}
+	\caption{BASIC}
+	\label{basic}%label 放置的位置有讲究， 放后面
+\end{algorithm}
+\DecMargin{1em}
 % ------------sim(p_1, p_2) = \vec{p_1}---------------------------------- \cdot \vec{p_2}
 % ----------------------------------------------
 BPR是一个应对隐式反馈很流行的推荐框架. 它基于这样一个偏好假设: 如果一个用户$u$已经选择了物品$i$但是没有选择物品$j$，那么在BPR中, 我们认为相对于物品$j$用户$m$更喜欢物品$i$,并定义用户$u$关于物品$i$与$j$的偏好关系为：
