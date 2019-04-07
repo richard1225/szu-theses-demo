@@ -1,4 +1,5 @@
 \section{算法实现与结果分析}
+
 \label{analize}
 
 第\ref{analize}章将对以上提到的算法和改进进行实证研究，以评估算法的效率和改进方案。\ref{analize_subsection_1}节将介绍实验中使用的数据集、查询参数以及实验平台。4.2节将评估基于密度k-STC查询的改进方案。
@@ -10,28 +11,27 @@
 
 在180k的数据集中随机选择一个对象p,利用位置偏离得到一个新的对象，新的对象文本描述保持一致。从对象的文本中随机选取单词作为查询关键字，关键词数量为1，2，3。因为查询集是对象文本的子集，所以不会有查询为空的情况。
 
-实验评估了基本方法(basic)、带权重的IR-树的优化方法(Adv)。表4-1显示了实验中使用的参数值，其中粗体值是默认值。所有算法均采用Java语言实现，实验采用Intel(R) Core(TM) i5-4590 CPU @ 3.30GHz，内存8GB。所有的数据结构都保存在内存中。实验记录k-STC查询所需的平均运行时间。
+实验评估了基本方法(basic)、带权重的IR-树的优化方法(Adv)。表\ref{args_scale}显示了实验中使用的参数值，其中粗体值是默认值。所有算法均采用Java语言实现，实验采用Intel(R) Core(TM) i5-4590 CPU @ 3.30GHz，内存8GB。所有的数据结构都保存在内存中。实验记录k-STC查询所需的平均运行时间。
 
-\begin{document}
-\begin{center}
-\renewcommand\arraystretch{1.3}
-\begin{tabular}{|c|c|c|c|c|}
- \hline
- Text A     & Text B    & Text C    & Text D    & Text E    \\
- \hline
- A          & Text F    & Text G    & Text H    & Text I    \\
- \hline
- B          & Text J    & Text K    & Text L    & Text M    \\
- \hline
- \multirow{3}*{Text N}
-            & \multirow{3}*{Text O}
-                        & Text P    & Text Q    & Text R    \\
- \cline{3-5}
-            &           & \multirow{2}*{Text S}
-                                    & Text T    & Text U    \\
- \cline{4-5}
-            &           &           & Text V    & Text Z    \\
-\hline
-\end{tabular}
-    \end{center}
-\end{document}
+\begin{table}[h!]
+  \begin{center}
+    \renewcommand\arraystretch{1.5}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      描述 & 参数 & 取值 \\
+      \hline
+      请求集群数 & $\left|q.\psi \right|$ & $1,2,3$ \\
+      \hline
+      \multirow{2}*{密度约束} & \varepsilon & $1,2,10,20,50$  \\
+      \cline{2-3}
+      ~ & $minpts$ & 1$0, 20, 50, 100$ \\
+      \hline
+      平均参数 &  $\alpha$ & $0.1, 0.3, 0.5, 0.7, 0.9$ \\
+      \hline
+      数据集大小 &$ \left| D \right|$ & $10k, 50k, 100k, 150k, 180k$ \\
+      \hline
+    \end{tabular}
+    \caption{参数取值}
+    \label{args_scale}
+  \end{center}
+\end{table}

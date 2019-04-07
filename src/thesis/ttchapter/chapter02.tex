@@ -1,6 +1,4 @@
 \section{top-k\ 空间文本簇检索系统设计}
-\numberwithin{equation}{subsection}
-\numberwithin{algorithm}{section}
 
 空间文本簇检索过程包括文本预处理、空间索引构建、文本相似性度量、聚类算法选择、结果评价等过程。文本预处理阶段分为文本分词、构建倒排索引表；空间索引结构采用IR-树结构；文本相似度计算为余弦相似度；聚类算法选择基于密度的聚类方法中最具代表性的DBSCAN算法。总体设计流程如图\ref{topksearchprocess}所示：
 \begin{figure}[htbp]
