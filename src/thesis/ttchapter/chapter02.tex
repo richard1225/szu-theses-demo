@@ -40,7 +40,7 @@
   \item 如果一组相关对象$p_{i}$ 和$p_{j}$是可直达的，则有: 
   \begin{enumerate}
 		\item $p_{i} \in  N_{\varepsilon}(p_{j})$，且
-		\item \left| N_{\varepsilon}(p) \right| \geq minpts
+		\item $\left| N_{\varepsilon}(p) \right| \geq minpts$
 	\end{enumerate}
 	
 	\item 有一组可直达对象$p_{i}$和$p_{j}$以及一串相关对象$p_{1}, ..., p_{n}$，如果有$p_{i} = p_{1}, p_{j} = p_{n}$,则有$p_{m}和p_{m}+1$是可直达的，其中$1 \leq m < n.$ 
@@ -169,7 +169,7 @@ car, cars, car’s, cars’=> car
 
 \subsection{top-k空间文本簇查询处理算法}
 
-聚类算法选择基于密度的聚类方法中最具代表性的DBSCAN算法。DBSCAN随机选取一个对象作为核心点，检查核心点的邻近领域是否至少有若干个对象，满足则对邻近对象继续迭代检查，不满足而标记噪点。邻近区域的大小和密度阙值由用户决定。\ref{dbscan}
+聚类算法选择基于密度的聚类方法中最具代表性的DBSCAN算法。DBSCAN随机选取一个对象作为核心点，检查核心点的邻近领域是否至少有若干个对象，满足则对邻近对象继续迭代检查，不满足而标记噪点。邻近区域的大小和密度阙值由用户决定。
 
 DBSCAN算法的一个基本方案是，给定一个查询，根据查询关键字获得相关的对象集$D\varphi$，然后找到所有满足密度约束的簇，根据得分函数（公式\ref{simp1p2}）排序，返回最优的$k$个簇。但是这个方案效率很低，因为查找所有簇的开销很大。研究[3]提出了一种BASIC算法，该算法能够在不查找所有簇的情况下返回最顶层的$k$个簇。BASIC算法将前期得到的集群作为候选集群，然后根据第$k$个候选集群的得分设置阈值。BASIC算法对所有未来将找到的集群分数估计一个边界值，如果边界值比阈值低，则当前候选集群为最终结果。BASIC算法的提前停止条件大大提高了聚类效率。
 
@@ -349,7 +349,7 @@ DBSCAN算法的一个基本方案是，给定一个查询，根据查询关键�
 	% caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
 	% label的位置也有讲究
 	\begin{center}
-		\includegraphics[width=5in]{root-reverse-file.png}
+		\includegraphics[width=4in]{root-reverse-file.png}
 		\caption{根节点反向文件}
 		\label{root_reverse_file}
 	\end{center}
