@@ -35,3 +35,77 @@
     \label{args_scale}
   \end{center}
 \end{table}
+
+\subsection{效果评估}
+在不同参数设置不同的情况下，评估BASIC算法和改进方法。
+
+\textbf{1. 改变关键词的数量$\left| q.\psi \right|$}
+
+图\ref{change_key_num}显示了BASIC算法法和改进方法在改变查询关键字数量时的性能。关键词数量从1增加到3，随着查询关键字数量的增加，空间中相关的对象就越多，需要检查的簇就越多以及簇的范围就越大。搜索空间的加大直接影响了算法的性能，但因为优化方法可以更快地停止检查，所以始终比BASIC算法表现要好。
+
+\begin{figure}[htbp]
+  % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
+  % label的位置也有讲究
+  \begin{center}
+    \includegraphics[width=4in]{barchart-about-keynum.png}
+    \caption{改变关键词数量}
+    \label{change_key_num}
+  \end{center}
+\end{figure}
+
+\textbf{2. 改变密度约束}
+
+密度要求包括两个参数, $\epsilon$ 和$minpts$。图\ref{change_epsilon}显示了BASIC算法和改进方法在不同$\epsilon$下的性能。图\ref{change_minpts}显示了它们在不同$minpts$时的性能,y轴取对数。$\epsilon$数值大或$minpts$数值小表明低密度的要求。随着$\epsilon$增加,性能变得更糟。原因是在保持$minpts$不变的前提下，邻域范围的扩大意味着该邻域内所包含的对象将增多，直接导致满足密度要求的簇将增多，这显然会带来更多的计算量，性能就会下降。然而,$minpts$在[10,100]的区间内，对性能影响并不明显。主要是因为在这个区间内，当邻域范围不变时，大多数的簇都远远大于密度要求，因此提高$minpts$不会带来显著的计算量增长，对性能的影响也就不明显了。
+
+\begin{figure}[htbp]
+  % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
+  % label的位置也有讲究
+  \begin{center}
+    \includegraphics[width=4in]{barchart-change-e.png}
+    \caption{改变$\epsilon$}
+    \label{change_epsilon}
+  \end{center}
+\end{figure} 
+
+
+\begin{figure}[htbp]
+  % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
+  % label的位置也有讲究
+  \begin{center}
+    \includegraphics[width=4in]{barchart-change-minpts.png}
+    \caption{改变$minpts$}
+    \label{change_minpts}
+  \end{center}
+\end{figure} 
+
+\textbf{3. 改变平衡参数$\alpha$}
+
+\textcolor{red}{\textbf{数据缺失，后续补充。}}
+
+\textbf{4. 改变请求集群数量k}
+
+图\ref{change_k}显示了BASIC算法和改进方法在改变请求集群的k个数量时的性能。由图可知，$k$的变化对于算法性能几乎没有影响。当候选集群未达到$k$个时，算法继续查找集群，阙值为无限大，当集群达到$k$时，算法每次找到一个新的集群，阙值就更新一次并与边界值判断。所以$k$的变化直接带来的是阙值更新的次数，而不会影响得到簇的顺序，也不会带来计算量的显著增长，故对性能的影响较小。 
+
+\begin{figure}[htbp]
+  % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
+  % label的位置也有讲究
+  \begin{center}
+    \includegraphics[width=4in]{barchart-change-k.png}
+    \caption{改变$k$}
+    \label{change_k}
+  \end{center}
+\end{figure} 
+
+\textbf{5.改变数据集$\left| D \right|$}
+
+图\ref{change_dataset}显示了随着数据集的增大，BASIC算法和改进方法的性能变化。数据集对算法性能的影响是非常直观的，因为数据量直接带来了相关对象的增长，也就提高了计算量，因为而随着数据量的增长，性能表现越差。
+
+\begin{figure}[htbp]
+  % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
+  % label的位置也有讲究
+  \begin{center}
+    \includegraphics[width=4in]{change-dataset.png}
+    \caption{改变数据集}
+    \label{change_dataset}
+  \end{center}
+\end{figure} 
