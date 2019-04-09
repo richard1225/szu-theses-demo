@@ -8,8 +8,8 @@
 
 \pagestyle{empty}%不要页眉页脚
 %封面与诚信声明
-\include{data/cover}
-\include{data/statement}
+\include{chapter/cover}
+\include{chapter/statement}
 
 
 \zihao{-4}
@@ -36,21 +36,21 @@
 \setcounter{page}{0}  %重新设置页码计数
 \pagestyle{fancy}
 
-\include{ttchapter/cnabstract}
-\include{ttchapter/chapter01}
-\include{ttchapter/chapter02}
-\include{ttchapter/chapter03}
-\include{ttchapter/chapter04}
+\include{chapter/cnabstract}
+\include{chapter/chapter01}
+% \include{chapter/chapter02}
+% \include{chapter/chapter03}
+% \include{chapter/chapter04}
 
 %参考文献
 \kaishu
 \bibliographystyle{plain}
 \addcontentsline{toc}{section}{参考文献} %向目录中添加条目，以章/section的名义
-\bibliography{ref/tthesis.bib}
+\bibliography{ref/szuthesis.bib}
 
 
 %致谢与英文摘要
 \fangsong
-\include{data/acknowledgement}
-\include{data/enabstract}
+\include{chapter/acknowledgement}
+\include{chapter/enabstract}
 \end{document}
