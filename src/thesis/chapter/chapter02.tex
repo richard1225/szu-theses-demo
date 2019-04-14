@@ -12,18 +12,18 @@
 
 剩下的非专业名词使用正则表达式来进行替换。所用正则表达式如下：
 \begin{itemize}
-	\item \textbf{大数目金额}：\zihao{-4.5}$(([1-9]\backslash \backslash d*[\backslash \backslash d,，]*\backslash \backslash .?\backslash \backslash d*)|(0\backslash \backslash .[0-9]+))$(元|百万|万元|亿元)
+	\item \textbf{大数目金额}：\zihao{-4}$(([1-9]\backslash \backslash d*[\backslash \backslash d,，]*\backslash \backslash .?\backslash \backslash d*)|(0\backslash \backslash .[0-9]+))$(元|百万|万元|亿元)
 
-	\item \textbf{原、被告名字}: \zihao{-4.5}$((?<=($原告|被告$)$：$).*?(?=$，$|\/|$。|、))
+	\item \textbf{原、被告名字}: \zihao{-4}$((?<=($原告|被告$)$：$).*?(?=$，$|\/|$。|、))
 
-	\item \textbf{日期}：\zihao{-4.5}$\backslash$d$\{$4$\}$(年)$\backslash$d$\{$1,2$\}$(月)$\backslash$d$\{$1,2$\}$(日)|(?:$\backslash$d$\{$1,2$\}$|[$\backslash$u4e00-$\backslash$u9fa5])(?:个月|个星期|个工作日|日)|$\backslash$d$\{$4$\}$(年)$\backslash$d$\{$1,2$\}$(月)|$\backslash$d$\{$1,2$\}$(月)$\backslash$d$\{$1,2$\}$(日)|$\backslash$d$\{$4$\}$(> >
+	\item \textbf{日期}：\zihao{-4}$\backslash$d$\{$4$\}$(年)$\backslash$d$\{$1,2$\}$(月)$\backslash$d$\{$1,2$\}$(日)|(?:$\backslash$d$\{$1,2$\}$|[$\backslash$u4e00-$\backslash$u9fa5])(?:个月|个星期|个工作日|日)|$\backslash$d$\{$4$\}$(年)$\backslash$d$\{$1,2$\}$(月)|$\backslash$d$\{$1,2$\}$(月)$\backslash$d$\{$1,2$\}$(日)|$\backslash$d$\{$4$\}$(> >
 	年)|$\backslash$d$\{$1,4$\}$(日)
 
-	\item \textbf{利息}: \zihao{-4.5}($\backslash$d*($\backslash$.$\backslash$d*)?(?:$\backslash$\%|％|‰))|(百|千|万)分之[$\backslash$u4e00-$\backslash$u9fa5]$\{$1,2$\}$(点[$\backslash$u4e00-$\backslash$u9fa5])?|($\backslash$d(分))
+	\item \textbf{利息}: \zihao{-4}($\backslash$d*($\backslash$.$\backslash$d*)?(?:$\backslash$\%|％|‰))|(百|千|万)分之[$\backslash$u4e00-$\backslash$u9fa5]$\{$1,2$\}$(点[$\backslash$u4e00-$\backslash$u9fa5])?|($\backslash$d(分))
 
-	\item \textbf{数量}: \zihao{-4.5}((?:$\backslash$d|[$\backslash$u4e00-$\backslash$u9fa5])(?:份|张|次))
+	\item \textbf{数量}: \zihao{-4}((?:$\backslash$d|[$\backslash$u4e00-$\backslash$u9fa5])(?:份|张|次))
 	
-	\item \textbf{期限}: \zihao{-4.5}(?:$\backslash$d$\{$1,2$\}$|[$\backslash$u4e00-$\backslash$u9fa5])(?:个月|个星期)|[$\backslash$u4e00-$\backslash$u9fa5]月|$\backslash$d$\{$1,3$\}$(天)
+	\item \textbf{期限}: \zihao{-4}(?:$\backslash$d$\{$1,2$\}$|[$\backslash$u4e00-$\backslash$u9fa5])(?:个月|个星期)|[$\backslash$u4e00-$\backslash$u9fa5]月|$\backslash$d$\{$1,3$\}$(天)
 \end{itemize}
 
 通过上述正则表达式，匹配替换原词为指定的统一词汇，可以让文本的结构更加清晰，同时又保留了这部分关键词，分词的准确率有了很大的提升。
@@ -53,7 +53,7 @@
 测试数据表明，jieba分词能正确地切分绝大多的句子，即使句子中有未登陆词，jieba分词也能正确地切分出来，在处理一些极端的情况，如“结婚的和尚未结婚的”这种句子，jieba分词也能正确地切分。
 
 
-\subsection{Word2Vec词向量化}
+\subsection{词向量化}
 经过了jieba分词的处理，我们已经把每个句子转化为词语组成的集合，但是聚类算法主要是通过计算两个向量的距离来判断两个样本的相似度，所以我们光拿词语组成的集合是不够的。还需要把词语转换成向量。
 
 把句子转化为向量的方法大致有两种，1.通过词袋模型转换，2. 通过词向量模型转换
@@ -80,20 +80,10 @@
 	
 这两个词频向量就是基于词袋模型转换出来的向量，可以看出，这样转换的坏处是语境上下文完全丢失了，只保留了单词出现的频率，这是不足以完全展示一个句子的含义。
 
-同时，当你的词袋内的词越多，向量的纬度就会越大。我在一开始做词向量化的时候用的就是词袋模型，导致我的向量的纬度是十几万！这运行起来简直是个灾难，速度非常慢。所以一般我们不用原生的词袋模型来做词向量化。
+同时，当你的词袋内的词越多，向量的维度就会越大。我在一开始做词向量化的时候用的就是词袋模型，导致我的向量的维度是十几万！这运行起来简直是个灾难，速度非常慢。所以一般我们不用原生的词袋模型来做词向量化。
 
-\subsubsection{词向量模型}
-
-    词向量模型是考虑词语位置关系的一种模型。通过大量语料的训练，将每一个词语映射到高维度（几千、几万维以上）的向量当中，通过求余弦的方式，可以判断两个词语之间的关系，例如例句中的Jane和Bob在词向量模型中，他们的余弦值可能就接近1，因为这两个都是人名，Shenzhen和Bob的余弦值可能就接近0，因为一个是人名一个是地名。
-
-    现在常用word2vec构成词向量模型，它的底层采用基于CBOW和Skip-Gram算法的神经网络模型。
-
-1. CBOW模型
-
-    CBOW模型的训练输入是某一个特征词的上下文相关的词对应的词向量，而输出就是这特定的一个词的词向量。比如上面的第一句话，将上下文大小取值为2，特定的这个词是"go"，也就是我们需要的输出词向量,上下文对应的词有4个，前后各2个，这4个词是我们模型的输入。由于CBOW使用的是词袋模型，因此这4个词都是平等的，也就是不考虑他们和我们关注的词之间的距离大小，只要在我们上下文之内即可。
-
-    这样我们这个CBOW的例子里，我们的输入是4个词向量，输出是所有词的softmax概率（训练的目标是期望训练样本特定词对应的softmax概率最大），对应的CBOW神经网络模型输入层有4个神经元，输出层有词汇表大小个神经元。隐藏层的神经元个数我们可以自己指定。通过DNN的反向传播算法，我们可以求出DNN模型的参数，同时得到所有的词对应的词向量。这样当我们有新的需求，要求出某4个词对应的最可能的输出中心词时，我们可以通过一次DNN前向传播算法并通过softmax激活函数找到概率最大的词对应的神经元即可。
-
+\subsubsection{Word2Vec词向量模型}
+那么如何有效地把切词切出来的集合转换成计算机能够识别处理的信息呢？本文使用了开源项目gensim中Word2cev模块。它是一个NLP工具，在2013年被google推出。它通过词嵌入(Word Embedding)的做法，在保存词与词的联系的前提下，把词向量的维度降到最低。从概念上来说，它是通过局部线性嵌入(LLE)来学习高维度的数据结构的低维表示方法。word2vec是基于人工神经网络的，比过去的的非监督式学习和N-Gram语法模型都要快很多。
 
 \begin{figure}[htbp]
 	\centering
@@ -113,12 +103,41 @@
 	\label{word_vec:example}
 \end{figure}
 
-2.Skip-Gram模型
+Word2Vec里面有两个模型，CBOW模型和Skip-gram模型，如图\ref{word_vec:cbow}所示，cbow是通过词$W_t$去推断$W_t$的上下文$(W_{t+2}...W_{t-2})$, 而Skip-gram与cbow模型刚好对称，是通过$W_t$的上下文来推断$W_t$, skip-gram如图\ref{word_vec:skip_gram}所示
 
-    Skip-Gram模型和CBOW的思路是反着来的，即输入是特定的一个词的词向量，而输出是特定词对应的上下文词向量。还是上面的例子，我们的上下文大小取值为2， 特定的这个词"go"是我们的输入，而这4个上下文词是我们的输出。
+本项目使用了开源项目gensim的模块$gensim.models$中的\textbf{Word2vec}和$gensim.models.word2vec$中的\textbf{PathLineSentences}，\textbf{Word2vec}用于训练word2vec词向量，\textbf{PathLineSentences}用于以文件流的形式逐步读取数据，以减轻内存的压力。\textbf{Word2vec}的参数如表\ref{w2v_arg_table}所示：
 
-    这样我们这个Skip-Gram的例子里，我们的输入是特定词， 输出是softmax概率排前4的4个词，对应的Skip-Gram神经网络模型输入层有1个神经元，输出层有词汇表大小个神经元。隐藏层的神经元个数我们可以自己指定。通过DNN的反向传播算法，我们可以求出DNN模型的参数，同时得到所有的词对应的词向量。这样当我们有新的需求，要求出某1个词对应的最可能的4个上下文词时，我们可以通过一次DNN前向传播算法得到概率大小排前4的softmax概率对应的神经元所对应的词即可。
+\begin{table}[h!]
+  \begin{center}
+    \renewcommand\arraystretch{1.5}
+    \begin{tabular}{|cc|cc|}
+      \hline
+      \textbf{参数} & \textbf{说明} & \textbf{参数} & \textbf{说明} \\
+			\hline
+			sentence & 训练数据 & window & 包括上下文和中间词的窗口宽度 \\
+			\multirow{2}*{sg} & sg=1，采用CBOW模型 & \multirow{2}*{min\_count} & \multirow{2}*{词向量中的词出现最低频次} \\
+      ~ & sg=0，采用Skip-gram模型 & ~ & ~ \\
+			size & 词向量的维度 & workers & 训练word2vec时调用的系统核数量 \\
+			
+      \hline
+    \end{tabular}
+    \caption{Word2vec参数取值}
+    \label{w2v_arg_table}
+  \end{center}
+\end{table} 
 
-词向量模型突出特点：
+\textbf{sentence：} 用于设置word2vec训练数据源，一般传一个PathLineSentences对象。PathLineSentences对象构造时接受一个参数，路径名，它会足一读取路径下的所有文档，文档的内容是要经过切词的，并且以空格分隔开，格式如图\ref{cut_word_file}所示：
 
-    在词向量模型中，词向量与词向量之间有这非常特殊的特性。例如现在存在国王、男生、女人、皇后四个词向量，那么一个完善的词向量模型，就存在“国王-男人+女人=皇后”这样的关系。
+\textbf{sg：} sg=0时，用Skip-gram模型进行训练，sg=1时用CBOW模型进行训练。
+
+
+\begin{figure}[htbp]
+  % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
+  % label的位置也有讲究
+  \begin{center}
+    \includegraphics[width=5in]{cut_word_result.png}
+    \caption{切好词的文档}
+    \label{cut_word_file}
+  \end{center}
+\end{figure} 
+
