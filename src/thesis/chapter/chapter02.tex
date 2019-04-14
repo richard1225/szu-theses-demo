@@ -85,7 +85,7 @@
 \subsubsection{Word2Vec词向量模型}
 那么如何有效地把切词切出来的集合转换成计算机能够识别处理的信息呢？本文使用了开源项目gensim中Word2cev模块。它是一个NLP工具，在2013年被google推出。它通过词嵌入(Word Embedding)的做法，在保存词与词的联系的前提下，把词向量的维度降到最低。从概念上来说，它是通过局部线性嵌入(LLE)来学习高维度的数据结构的低维表示方法。word2vec是基于人工神经网络的，比过去的的非监督式学习和N-Gram语法模型都要快很多。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}{.5\textwidth}
 		\centering
@@ -103,22 +103,29 @@
 	\label{word_vec:example}
 \end{figure}
 
-Word2Vec里面有两个模型，CBOW模型和Skip-gram模型，如图\ref{word_vec:cbow}所示，cbow是通过词$W_t$去推断$W_t$的上下文$(W_{t+2}...W_{t-2})$, 而Skip-gram与cbow模型刚好对称，是通过$W_t$的上下文来推断$W_t$, skip-gram如图\ref{word_vec:skip_gram}所示
+Word2Vec里面有两个模型，CBOW模型和Skip-gram模型，如图\ref{word_vec:cbow}所示，cbow是通过词$W_t$去推断$W_t$的上下文$(W_{t+2}...W_{t-2})$, 而Skip-gram与cbow模型刚好对称，是通过$W_t$的上下文来推断$W_t$, skip-gram如图\ref{word_vec:skip_gram}
 
 本项目使用了开源项目gensim的模块$gensim.models$中的\textbf{Word2vec}和$gensim.models.word2vec$中的\textbf{PathLineSentences}，\textbf{Word2vec}用于训练word2vec词向量，\textbf{PathLineSentences}用于以文件流的形式逐步读取数据，以减轻内存的压力。\textbf{Word2vec}的参数如表\ref{w2v_arg_table}所示：
 
 \begin{table}[h!]
   \begin{center}
-    \renewcommand\arraystretch{1.5}
-    \begin{tabular}{|cc|cc|}
+    \renewcommand\arraystretch{1.8}
+    \begin{tabular}{|c|c|}
       \hline
-      \textbf{参数} & \textbf{说明} & \textbf{参数} & \textbf{说明} \\
+      \textbf{参数} & \textbf{说明} \\
 			\hline
-			sentence & 训练数据 & window & 包括上下文和中间词的窗口宽度 \\
-			\multirow{2}*{sg} & sg=1，采用CBOW模型 & \multirow{2}*{min\_count} & \multirow{2}*{词向量中的词出现最低频次} \\
-      ~ & sg=0，采用Skip-gram模型 & ~ & ~ \\
-			size & 词向量的维度 & workers & 训练word2vec时调用的系统核数量 \\
-			
+			sentence & 训练数据  \\
+			\hline
+			\multirow{2}*{sg} & sg=1，采用CBOW模型  \\
+      ~ & sg=0，采用Skip-gram模型 \\
+			\hline
+			size & 词向量的维度  \\
+			\hline
+			window & 包括上下文和中间词的窗口宽度 \\
+			\hline
+			min\_count & 词向量中的词出现最低频次 \\
+			\hline
+			workers & 训练word2vec时调用的系统核数量 \\
       \hline
     \end{tabular}
     \caption{Word2vec参数取值}
@@ -128,16 +135,34 @@ Word2Vec里面有两个模型，CBOW模型和Skip-gram模型，如图\ref{word_v
 
 \textbf{sentence：} 用于设置word2vec训练数据源，一般传一个PathLineSentences对象。PathLineSentences对象构造时接受一个参数，路径名，它会足一读取路径下的所有文档，文档的内容是要经过切词的，并且以空格分隔开，格式如图\ref{cut_word_file}所示：
 
-\textbf{sg：} sg=0时，用Skip-gram模型进行训练，sg=1时用CBOW模型进行训练。
-
-
-\begin{figure}[htbp]
+\begin{figure}[H]
   % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
   % label的位置也有讲究
   \begin{center}
-    \includegraphics[width=5in]{cut_word_result.png}
+    \includegraphics[width=6in]{cut_word_result.png}
     \caption{切好词的文档}
     \label{cut_word_file}
   \end{center}
 \end{figure} 
 
+\textbf{sg：} sg=0时，用Skip-gram模型进行训练，sg=1时用CBOW模型进行训练。由于我们使用的是cbow模型，所以这里设置为1。
+
+\textbf{size：} 代表训练出来的词向量的维度，设置为300。
+
+\textbf{window：} 词语受影响的上下文词语数量范围，可以这么理解，给出一个句子"stackoverflow is a great website for programmer",如果此时window的size是2，那么"stackoverflow"的词向量会直接被"is"和"a"影响，如果window的大小是5，那么"stackoverflow"词向量会被左右各5个相邻的词语影响，这里是"is a great website for"。
+
+\textbf{min\_count：} 这个变量用于设置一个阈值，当词的出现次数大于阈值时，才能被加入词向量，这里设置值为5。
+
+\textbf{workers：} 用于设置word2vec执行时可调用的系统核数，可以用数字表示，本项目中使用服务器的所有核数，通过multiprocessing.cpu\_count()来获取。
+
+训练出来的词向量是一个由许多300维的向量构成，可以通过传入一个词来获取该词对应的300维词向量，要注意的是，若该词没有参与词向量的训练，那么会报undefined之类的错误。词向量矩阵结构如图\ref{word_vec_array}所示：
+
+\begin{figure}[H]
+  % caption放上面就会显示在图的上方，出现在下面就是出现在图的下方
+  % label的位置也有讲究
+  \begin{center}
+    \includegraphics[width=6in]{word_vec.png}
+    \caption{词向量矩阵}
+    \label{word_vec_array}
+  \end{center}
+\end{figure} 
